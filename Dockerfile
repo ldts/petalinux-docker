@@ -55,6 +55,7 @@ RUN apt-get update &&  DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
   bc \
   u-boot-tools \
   python \
+  vim \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
@@ -63,7 +64,6 @@ RUN dpkg --add-architecture i386 &&  apt-get update &&  \
       zlib1g:i386 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
 
 ARG PETA_VERSION
 ARG PETA_RUN_FILE
@@ -90,11 +90,15 @@ RUN chmod a+rx /${PETA_RUN_FILE} && \
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
+COPY ./tftp /etc/xinetd.d/tftp
+
 USER vivado
 ENV HOME /home/vivado
 ENV LANG en_US.UTF-8
-RUN mkdir /home/vivado/project
+RUN mkdir /home/vivado/project && mkdir /home/vivado/tftpboot && chmod -R 777 /home/vivado/tftpboot
 WORKDIR /home/vivado/project
 
 #add vivado tools to path
 RUN echo "source /opt/Xilinx/petalinux/settings.sh" >> /home/vivado/.bashrc
+
+ENTRYPOINT sudo service xinetd restart && /bin/bash
