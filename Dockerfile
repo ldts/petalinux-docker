@@ -96,9 +96,10 @@ USER vivado
 ENV HOME /home/vivado
 ENV LANG en_US.UTF-8
 RUN mkdir /home/vivado/project && mkdir /home/vivado/tftpboot && chmod -R 777 /home/vivado/tftpboot
-WORKDIR /home/vivado/project
+WORKDIR /home/vivado/
 
-#add vivado tools to path
+# add vivado tools to path
+RUN echo "PATH=$PATH:/opt/Xilinx/petalinux/tools/xsct/bin/" >> /home/vivado/.bashrc
 RUN echo "source /opt/Xilinx/petalinux/settings.sh" >> /home/vivado/.bashrc
 
 ENTRYPOINT sudo service xinetd restart && /bin/bash
