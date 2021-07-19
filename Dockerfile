@@ -56,6 +56,7 @@ RUN apt-get update &&  DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
   u-boot-tools \
   python \
   vim \
+  netcat \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
